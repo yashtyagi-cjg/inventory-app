@@ -17,3 +17,6 @@ block content
                     a(href=item.url class='no-underline-links')= item.name 
     else 
         p(class="lead") There are no categories/items to display
+
+    if exists === true
+        p.lead.text-danger This category already exists in database. 

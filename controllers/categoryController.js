@@ -11,10 +11,14 @@ exports.category_get = asyncHandler(
         const items = await Item.find({category: req.params.id}).populate("category").exec()
         const category = await Category.findById(req.params.id).exec();
         // console.log(items);
+        console.log("EXISTS: " + req.params.exists)
+        console.log("EXISTS ID: " + req.params.id)
+        console.log("Category: " + category)
         res.render("categories", 
         {
             title: category.name, //(items === undefined? undefined: Array.from(items)[0].category.name),
             items: items,
+            exists: (undefined==req.params.exists?'':true),
         })
     }
 )
@@ -72,8 +76,20 @@ exports.category_create_post = [
             // next()
         }
         else{
-            await newCategory.save()
-            res.redirect(newCategory.url);
+            const resultExistence = await Category.find({name:req.body.categoryName}).exec()
+            console.log("DOES EXISTS: " + JSON.stringify(resultExistence))
+            if(resultExistence.length > 0) //Added to avoid duplication
+            {
+                console.log("DUPLICATE")
+                res.redirect('/category/'+resultExistence[0]._id+"/exists")
+            }
+            else{
+                console.log("NEW")
+                await newCategory.save()
+                res.redirect(newCategory.url);
+            }
+            
+            
         }
     }
 )]

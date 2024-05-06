@@ -63,6 +63,6 @@ router.post('/delete/category/:id', categoryController.category_delete_post);
 
 // GET CATEGORY DETAILS 
 
-router.get('/category/:id', categoryController.category_get)
+router.get('/category/:id/:exists?', categoryController.category_get)
 
 module.exports = router;
