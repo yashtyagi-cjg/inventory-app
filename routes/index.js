@@ -47,7 +47,7 @@ router.get('/categories', categoryController.categories_get);
 // CREATE CATEGORIES
 
 router.get('/create/category', categoryController.category_create_get);
-router.post('/create/cateory', categoryController.category_create_post);
+router.post('/create/category', categoryController.category_create_post);
 
 
 //  UPDATE CATEGORIES

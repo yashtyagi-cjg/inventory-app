@@ -1,7 +1,7 @@
 extends layout
 
 block content
-    h1(class='display-6')= title
+    h1(class='display-6')=title
 
     if (categories != undefined)
         ol(class='list-unstyled ms-4')
@@ -10,10 +10,10 @@ block content
                     a(href=category.url class='no-underline-links')= category.name + " : "
                     span= items.filter((item) => item.category.name === category.name).length 
 
-    else if (items != undefined)
+    else if (items.length > 0)
         ol(class='list-unstyled ms-4')
             each item in items 
                 li 
                     a(href=item.url class='no-underline-links')= item.name 
     else 
-        p(class="lead") There are no categories to display
+        p(class="lead") There are no categories/items to display

@@ -4,10 +4,14 @@ block content
     h1(class='display-6')=title 
     
     form(method='POST')
-        div.form-control 
+        div.form-group 
             label.form-label.lead.mt-3(for='categoryName') Name: 
-            input.form-control#categoryName(type='text' value=(undefined===category?'':category.name) required) 
+            input.form-control#categoryName(type='text' placeholder='Books' name='categoryName' value=(undefined===category?'':category.name) required) 
             div.form-text This will be used to create a new category in records. 
             
             div.d-flex.justify-content-center
                 button.btn.btn-primary.mt-3.lead(type='submit') Submit
+    if errors 
+        ul
+            for error in errors
+                li.text-warn !{error.msg} 
