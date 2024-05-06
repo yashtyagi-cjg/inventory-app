@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
+require('dotenv').config()
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -41,11 +42,10 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-const mongodDbString = "mongodb+srv://s2014moose:x4WNiks24U3xuGN@cluster0.8ax1lvy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 main().catch((err)=>console.log(err));
 async function main(){
-  await mongoose.connect(mongodDbString);
+  await mongoose.connect(process.env.DB_CONN);
   console.log("Connected to MongoDB")
 }
 
