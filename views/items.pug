@@ -1,0 +1,11 @@
+extends layout 
+block content 
+    h1(class="display-6")=title 
+
+    if items != undefined && items.length > 0
+        ol(class='list-unstyled ms-4')
+            each item in items 
+                li 
+                    a(href=item.url class='no-underline-links')=item.name + " : " + item.quantity + " Qty."
+    else 
+        p(class='lead') There are no items to display

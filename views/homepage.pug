@@ -1,0 +1,18 @@
+extends layout 
+block content 
+
+    h1(class='display-6')=title
+    
+    p(class='lead') Current Status 
+
+    ol(class='list-unstyled ms-3') 
+        if (categories === undefined)
+            li There are no categories 
+        else
+            li All Categories: !{categories.length}
+        if (items == undefined)
+            li There are no items
+        else
+            li All Items: !{items.length}
+
+

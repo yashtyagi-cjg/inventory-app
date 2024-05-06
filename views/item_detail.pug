@@ -1,0 +1,12 @@
+extends layout 
+block content 
+
+    h1(class='display-6')=title 
+    if item != undefined
+        ol(class='list-unstyled ms-4')
+            li Price: #{item.price} 
+            li Available Quantity: #{item.quantity} 
+            li Category: 
+                a(class='no-underline-links' href=item.category.url)=item.category.name 
+    else 
+        p(class='lead') Opsies! There is no information available for this item. 

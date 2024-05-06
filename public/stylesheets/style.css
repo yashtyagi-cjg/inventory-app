@@ -1,0 +1,19 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a,.no-underline-links{
+  color: #00B7FF;
+
+}
+
+.sidebar-nav{
+  list-style: none;
+  padding:0px;
+  margin-top:20px;
+}
+
+.no-underline-links{
+text-decoration: none;
+}

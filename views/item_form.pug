@@ -1,0 +1,42 @@
+extends layout 
+block content 
+    h1(class='display-6 mb-4')=title 
+
+    form(method='POST')
+        div.form-control 
+            label.form-label.lead(for='itemName') Item Name: 
+            input#itemName.form-control(type='text' value=(undefined===item?'':item.name) required)
+            div.form-text This name will be used as an identifier to add to inventory 
+
+        
+            label.form-label.mt-3.lead(for='itemPrice') Price ($): 
+            input#itemPrice.form-control(type='number' value=(undefined===item?'':item.price) required)
+        
+         
+            label.form-label.mt-3.lead(for='itemQty') Quantity: 
+            input#itemQty.form-control(type='number' value=(undefined===item?'':item.quantity) required) 
+        
+        
+            label.form-label.mt-3.lead Available: 
+            div.form-check.col.ms-4
+                input.form-check-input(type='radio' name='available-radio' id='available-true-radio' required)
+                label.form-check-label(for='available-true-radio') True 
+                
+            div.form-check.col.ms-4
+                input.form-check-input(type='radio' name='available-radio' id='available-false-radio' checked required)
+                label.form-check-label(for='available-false-radio') False
+        
+            div.lead.form-label.mt-3 Categories
+            if categories === undefined
+                    p.form-control.lead.text-danger No Categories available. Please create categories before add the item.
+                
+            else
+                select.form-select
+                    option(value='' required) ---Please select an option---
+                    for category in categories
+                        if category.selected === true 
+                            option(value=category._id selected)=category.name 
+                        else 
+                            option(value=category._id)=category.name 
+            div.d-flex.justify-content-center
+                button.btn.btn-primary.mt-4.leads(type='submit' disabled=(categories===undefined?true:false)) Submit
