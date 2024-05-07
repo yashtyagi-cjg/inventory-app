@@ -11,9 +11,9 @@ exports.category_get = asyncHandler(
         const items = await Item.find({category: req.params.id}).populate("category").exec()
         const category = await Category.findById(req.params.id).exec();
         // console.log(items);
-        console.log("EXISTS: " + req.params.exists)
-        console.log("EXISTS ID: " + req.params.id)
-        console.log("Category: " + category)
+        // console.log("EXISTS: " + req.params.exists)
+        // console.log("EXISTS ID: " + req.params.id)
+        // console.log("Category: " + category)
         res.render("categories", 
         {
             title: category.name, //(items === undefined? undefined: Array.from(items)[0].category.name),
@@ -66,7 +66,7 @@ exports.category_create_post = [
         })
         console.log("POST CREATE " + JSON.stringify(req.body) + " \nERRORS: " + Array.from(errors))
         if(!errors.isEmpty()){
-            console.log("ERROR ARRAY: " + errors)
+            // console.log("ERROR ARRAY: " + errors)
             res.render('category_form',
             {
                 title: "Create Category",
@@ -81,11 +81,11 @@ exports.category_create_post = [
             console.log("DOES EXISTS: " + JSON.stringify(resultExistence))
             if(resultExistence.length > 0) //Added to avoid duplication
             {
-                console.log("DUPLICATE")
+                // console.log("DUPLICATE")
                 res.redirect('/category/'+resultExistence[0]._id+"/exists")
             }
             else{
-                console.log("NEW")
+                // console.log("NEW")
                 await newCategory.save()
                 res.redirect(newCategory.url);
             }
