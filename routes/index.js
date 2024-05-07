@@ -33,7 +33,7 @@ router.post('/delete/item/:id', itemController.delete_item_post);
 
 
 // ITEM DETAILS
-router.get('/item/:id', itemController.item_get);
+router.get('/item/:id/:exists?', itemController.item_get);
 
 
 // CATEGORY CONTROLLER ROUTES

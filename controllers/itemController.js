@@ -1,7 +1,8 @@
 const Item = require('./../models/item')
 const Category = require('./../models/category')
 const asyncHandler = require('express-async-handler');
-
+const {body, validationResult} = require('express-validator')
+const validator = require('validator');
 
 exports.get_homepage = asyncHandler(
     async(req, res, next)=>{
@@ -24,10 +25,12 @@ exports.item_get = asyncHandler(
     async(req, res, next)=>{
         const item = await Item.findById(req.params.id).populate("category").exec();
         // console.log(item)
+        console.log("PARAMS: " + req.params.exists)
         res.render("item_detail", 
         {
             title: item.name,
             item: item,
+            exists: (undefined==req.params.exists?'':true),
         })
     }
 )
@@ -41,6 +44,7 @@ exports.items_get = asyncHandler(
         {
             title: "Items",
             items: items,
+            
         })
     }
 )
@@ -60,11 +64,75 @@ exports.create_item_get = asyncHandler(
 )
 
 //Handle Create Item
-exports.create_item_post = asyncHandler(
+exports.create_item_post = [
+    body('itemName', "Name of Item should be non-alphanumeric")
+    .trim()
+    .isAlpha(),
+
+
+    body('itemPrice')
+    .trim()
+    .isNumeric().withMessage("Price must be a number")
+    .notEmpty().withMessage("Price is required")
+    .custom(value=>{
+        const numericValue = parseFloat(value);
+        if(!validator.isFloat(value, {min: 1})){
+            throw new Error('Price must be greater than 0')
+        }
+        return true;
+    }),
+
+    body('itemQty')
+    .trim()
+    .isNumeric().withMessage("Quantity must be a number")
+    .notEmpty().withMessage("Quantity is required")
+    .custom(value=>{
+        const numericValue = parseFloat(value);
+        if(!validator.isFloat(value, {min: 0})){
+            throw new Error("Quantity must be greater than -1")
+        }
+        return true;
+    }),
+
+    asyncHandler(
     async(req, res, next)=>{
-        res.send("POST CREATE ITEM");
+
+        const errors = validationResult(req);
+
+        const newItem = new Item({
+            name: req.body.itemName,
+            category: req.body.itemCategory,
+            available: req.body['available-radio'],
+            price: req.body.itemPrice,
+            quantity: req.body.itemQty,
+        })
+        // console.log(req.body)
+        // console.log(newItem)
+        console.log("req.body"+JSON.stringify(req.body))
+        if(!errors.isEmpty()){
+            const categories = await Category.find({}).exec()
+            res.render("item_form",
+            {
+                title: "Create Item",
+                item: newItem,
+                categories: categories,
+                errors: errors.array(),
+            })
+        }
+        else{
+            const checkItem = await Item.find({
+                name: req.body.itemName,
+                category: req.body.itemCategory,
+            }).exec()
+            if(checkItem.length > 0){
+                res.redirect(checkItem[0].url+"/exists")
+            }else{
+                await newItem.save();
+                res.redirect(newItem.url);
+            }
+        }
     }
-)
+)]
 
 
 //Display Update Item
