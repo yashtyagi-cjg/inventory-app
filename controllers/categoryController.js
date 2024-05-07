@@ -64,7 +64,7 @@ exports.category_create_post = [
         const newCategory = new Category({
             name: req.body.categoryName,
         })
-        console.log("POST CREATE " + JSON.stringify(req.body) + " \nERRORS: " + Array.from(errors))
+        // console.log("POST CREATE " + JSON.stringify(req.body) + " \nERRORS: " + Array.from(errors))
         if(!errors.isEmpty()){
             // console.log("ERROR ARRAY: " + errors)
             res.render('category_form',
