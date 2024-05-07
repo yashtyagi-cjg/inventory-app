@@ -52,7 +52,7 @@ exports.category_create_get = asyncHandler(
 //Handle create Categories
 exports.category_create_post = [
     
-    body('categoryName')
+    body('categoryName', "Numerical Values not Allowed")
     .trim()
     .isAlpha()
     ,
@@ -66,11 +66,12 @@ exports.category_create_post = [
         })
         console.log("POST CREATE " + JSON.stringify(req.body) + " \nERRORS: " + Array.from(errors))
         if(!errors.isEmpty()){
+            console.log("ERROR ARRAY: " + errors)
             res.render('category_form',
             {
                 title: "Create Category",
                 category: newCategory,
-                errors: Array.from(errors),
+                errors: errors.array(),
             })
             return
             // next()
