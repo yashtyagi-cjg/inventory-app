@@ -19,6 +19,7 @@ exports.category_get = asyncHandler(
             title: category.name, //(items === undefined? undefined: Array.from(items)[0].category.name),
             items: items,
             exists: (undefined==req.params.exists?'':true),
+            category_id: req.params.id,
         })
     }
 )
@@ -45,6 +46,7 @@ exports.category_create_get = asyncHandler(
             title: "Create Category",
             category: undefined,
             errors: undefined,
+            
         });
     }
 )
@@ -98,16 +100,55 @@ exports.category_create_post = [
 //Display update Categories
 exports.category_update_get = asyncHandler(
     async(req, res, next)=>{
-        res.send("POST UPDATE CATEOGRIES")
+        const currentCategory = await Category.findById(req.params.id).exec();
+
+       
+        res.render("category_form",
+        {
+            title: "Update Category",
+            category: currentCategory,
+        })
     }
 )
 
 //Handle update Categories
-exports.category_update_post = asyncHandler(
+exports.category_update_post = [
+    body('categoryName', "Numerical Values not Allowed")
+    .trim()
+    .isAlpha()
+    ,
+    
+    asyncHandler(
     async(req, res, next)=>{
-        res.send("POST UPDATE CATEGORY");
+        const errors = validationResult(req);
+
+        const currentCategory = new Category(
+            {
+                name: req.body.categoryName,
+                _id: req.params.id,
+            }
+        )
+
+        const Exists = await Category.find({name: req.body.categoryName}).exec();
+        console.log(Array.from(Exists) + " is Exists");
+
+        if(!errors.isEmpty()){
+            res.render("category_form",
+            {
+                title: "Update Category",
+                category: currentCategory,
+                errors: errors.array(),
+
+            })
+        }
+        else if(Exists.length > 0){
+            res.redirect(Exists[0].url+'/exists');
+        }else{
+            const newItem = await Category.findByIdAndUpdate(req.params.id, currentCategory, {});
+            res.redirect(newItem.url)
+        }
     }
-)
+)]
 
 //Display delete Categories
 exports.category_delete_get = asyncHandler(
