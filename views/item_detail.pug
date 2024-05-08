@@ -11,5 +11,7 @@ block content
     else 
         p(class='lead') Opsies! There is no information available for this item. 
 
+    a(href='/update'+item.url)
+        button.btn.btn-primary Update
     if exists
         p.lead.text-danger This item already exists

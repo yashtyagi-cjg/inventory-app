@@ -25,7 +25,7 @@ exports.item_get = asyncHandler(
     async(req, res, next)=>{
         const item = await Item.findById(req.params.id).populate("category").exec();
         // console.log(item)
-        console.log("PARAMS: " + req.params.exists)
+        // console.log("PARAMS: " + req.params.exists)
         res.render("item_detail", 
         {
             title: item.name,
@@ -138,16 +138,101 @@ exports.create_item_post = [
 //Display Update Item
 exports.update_item_get = asyncHandler(
     async(req, res, next)=>{
-        res.send("GET UPDATE ITEM");
+
+        const [currentItem, categories] = await Promise.all([
+            Item.findById(req.params.id).populate("category").exec(),
+            Category.find({}).exec(),
+        ])
+
+        categories.forEach(category=>{
+            if(category._id.toString()===currentItem.category._id.toString()){
+                category.selected=true;
+            }
+        })
+        res.render("item_form", {
+            title:"Update Item",
+            item: currentItem,
+            categories: categories,
+        })
     }
 )
 
 //Handle Update Item
-exports.update_item_post = asyncHandler(
+exports.update_item_post = [
+    body('itemName')
+    .trim()
+    .isAlpha().withMessage("Only Alphabets Allowed"),
+
+    body('itemPrice')
+    .trim()
+    .isNumeric().withMessage("Only Numerice Characters Allowed")
+    .custom(value=>{
+        if(parseFloat(value) < 0){
+            throw new Error("Price should be a whole number");
+        }
+        return true;
+    }),
+
+    body('itemQty')
+    .trim()
+    .isNumeric().withMessage("Only Numerice Charecters Allowed for Quantity")
+    .custom(value=>{
+        if(parseFloat(value) < 0){
+            throw new Error("Quantity should be a whole number")
+        }
+    }),
+    
+    asyncHandler(
     async(req, res, next)=>{
-        res.send("POST UPDATE ITEM");
+        const errors = validationResult(req);
+
+        const updatedItem = new Item({
+            name: req.body.itemName,
+            price: req.body.itemPrice,
+            quantity: req.body.itemQty,
+            available: req.body['available-radio'],
+            category: req.body.itemCategory,
+            _id : req.params.id,
+        })
+
+        if(!errors.isEmpty()){
+            const categories = await Category.find({}).exec();
+
+            categories.forEach(category=>{
+                if(category._id.toString() === updatedItem.category._id.toString()){
+                    category.selected = true;
+                }
+            })
+            res.render("item_form",{
+                title: "Update Item",
+                item: updatedItem,
+                categories: categories,
+                errors: errors.array(),
+                
+            })
+        }else{
+            const itemExists = await Item.find({
+                name: updatedItem.name,
+                category: updatedItem.category,
+            }).exec();
+
+            itemExists.forEach((item,idx)=>{
+                if(item._id.toString() === req.params.id.toString()){
+                    itemExists.splice(idx, 1);
+                }
+            })
+            console.log(itemExists)
+            if( itemExists.length > 0){
+                res.redirect(itemExists[0].url+'/exists')
+            }else{
+                const newUpdate = await Item.findByIdAndUpdate(req.params.id, updatedItem, {});
+                res.redirect(newUpdate.url);  
+            }
+
+            
+        }
     }
-)
+)]
 
 //Display Delete Item
 exports.delete_item_get = asyncHandler(

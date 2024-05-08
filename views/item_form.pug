@@ -33,7 +33,7 @@ block content
             else
                 select.form-select(name='itemCategory')
                     option(value='' required) ---Please select an option---
-                    for category in categories
+                    each category in categories
                         if category.selected === true 
                             option(value=category._id selected)=category.name 
                         else 
