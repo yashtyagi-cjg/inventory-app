@@ -234,7 +234,7 @@ exports.update_item_post = [
     }
 )]
 
-//Display Delete Item
+//Display Delete Item --NOT REQUIRED
 exports.delete_item_get = asyncHandler(
     async(req, res, next)=>{
         res.send("GET DELETE ITEM");
@@ -244,6 +244,7 @@ exports.delete_item_get = asyncHandler(
 //Handle Delete Item
 exports.delete_item_post = asyncHandler(
     async(req, res, next)=>{
-        res.send("POST DELETE ITEM");
+        await Item.findByIdAndDelete(req.params.id);
+        res.redirect('/items')
     }
 )

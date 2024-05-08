@@ -11,7 +11,24 @@ block content
     else 
         p(class='lead') Opsies! There is no information available for this item. 
 
-    a(href='/update'+item.url)
-        button.btn.btn-primary Update
+    div
+        a.me-5(href='/update'+item.url)
+            button.btn.btn-primary.me-2 Update
+        //- a(href='/delete'+item.url)
+        button.btn.btn-danger(type='button', data-bs-toggle='modal', data-bs-target='#deleteModal') Delete
     if exists
         p.lead.text-danger This item already exists
+    
+    .modal.fade#deleteModal(tabindex='-1', aria-labelledby='deleteModalLabel', aria-hidden='true')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title#deleteModalLabel Delete Item
+                    button.btn-close(type='button', data-bs-dismiss='modal', aria-label='Close')
+                .modal-body
+                    p Are you sure you want to delete this item?
+                .modal-footer
+                    button.btn.btn-secondary(type='button', data-bs-dismiss='modal') Cancel
+                    //- Form for deleting the item
+                    form(action=`/delete${item.url}`, method='POST')
+                        button.btn.btn-danger(type='submit') Delete
