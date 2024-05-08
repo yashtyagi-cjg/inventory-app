@@ -150,7 +150,7 @@ exports.category_update_post = [
     }
 )]
 
-//Display delete Categories
+//Display delete Categories---NOT REQUIRED ANYMORE
 exports.category_delete_get = asyncHandler(
     async(req, res, next)=>{
         res.send("GET DELETE CATEGORY");
@@ -160,6 +160,20 @@ exports.category_delete_get = asyncHandler(
 //Handle Delete Categories
 exports.category_delete_post = asyncHandler(
     async(req, res, next)=>{
-        res.send("POST DELETE CATEGORY");
+        const Exists = await Category.findById(req.params.id).exec();
+        const items = await Item.find({category: req.params.id}).populate("category").exec()
+        if(items.length > 0){
+            res.render("categories", 
+            {
+                category: Exists,
+                title: Exists.name,
+                items: items,
+                category_id: req.params.id,
+                items_exist: true,
+            })
+        }else{
+            await Category.findByIdAndDelete(req.params.id).exec();
+            res.redirect('/categories')
+        }
     }
 )

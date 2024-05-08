@@ -17,13 +17,33 @@ block content
                     a(href=item.url class='no-underline-links')= item.name 
         
         a(href='/update/category/'+category_id)
-            button.btn.btn-primary Update
+            button.btn.btn-primary.me-2 Update
+        button.btn.btn-danger(type='button' data-bs-toggle='modal' data-bs-target='#myModal') Delete
     else 
         p(class="lead") There are no categories/items to display
 
         a(href='/update/category/'+category_id)
-            button.btn.btn-primary Update
+            button.btn.btn-primary.me-2 Update
+        button.btn.btn-danger(type='button' data-bs-toggle='modal' data-bs-target='#myModal') Delete
 
 
     if exists === true
         p.lead.text-danger This category already exists in database. 
+    
+    if items_exist === true 
+        p.lead.text-danger.mt-4 Please delete associated items before deleting this category
+    
+
+    div(class='modal fade' id='myModal' tabindex='-1' data-bs-backdrop='static' data-bs-keyboard='false')
+        div(class="modal-dialog")
+            div(class='modal-content')
+                div(class='modal-header')
+                    h1.modal-title.fs-5#staticBackdropLabel Delete 
+                    button(type='button' class='btn-close' data-bs-dismiss='modal')
+                div(class='modal-body')
+                    p.lead Deleting it? 
+                div.modal-footer 
+                    button.btn.btn-secondary(data-bs-dismiss='modal' type='button') Close 
+                    form(method='POST', action=`/delete/category/${category_id}`)
+                        button.btn.btn-danger(type='Submit') Delete
+            
