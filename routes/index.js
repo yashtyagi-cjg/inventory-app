@@ -15,6 +15,7 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({storage: storage});
+const cpUpload = upload.single('profilePic');;
 
 
 
@@ -34,13 +35,13 @@ router.get('/items', itemController.items_get);
 
 router.get('/create/item', itemController.create_item_get);
 
-router.post('/create/item', itemController.create_item_post);
+router.post('/create/item', cpUpload, itemController.create_item_post);
 
 //UPDATE ITEMS
 
 router.get('/update/item/:id', itemController.update_item_get);
 
-router.post('/update/item/:id', itemController.update_item_post);
+router.post('/update/item/:id', cpUpload, itemController.update_item_post);
 
 
 //DELETE ITEMS
@@ -85,7 +86,7 @@ router.get('/category/:id/:exists?', categoryController.category_get)
 
 
 //TESTING ROUTE 
-const cpUpload = upload.fields([{name: 'profilePic', maxCount: 1}]);
+
 router.get('/abc/def',  categoryController.testing_get);
 
 router.post('/abc/def', cpUpload, categoryController.testing_post);

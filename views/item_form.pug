@@ -2,7 +2,7 @@ extends layout
 block content 
     h1(class='display-6 mb-4')=title 
 
-    form(method='POST')
+    form(method='POST' enctype='multipart/form-data')
         div.form-control 
             label.form-label.mt-3.lead(for='profilePic') Upload Picture: 
             input#profilePic.form-control(type='file' name='profilePic') 

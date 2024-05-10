@@ -3,6 +3,8 @@ block content
 
     h1(class='display-6')=title 
     if item != undefined
+        if item.image_secure_url != undefined
+            img.img-fluid.rounded(src=item.image_secure_url)
         ol(class='list-unstyled ms-4')
             li Price: #{item.price} 
             li Available Quantity: #{item.quantity} 
