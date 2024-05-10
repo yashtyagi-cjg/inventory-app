@@ -1,4 +1,5 @@
 const asyncHandler = require('express-async-handler')
+const fs = require('fs');
 
 
 //CLOUDINARY
@@ -13,9 +14,18 @@ exports.uploadImage = asyncHandler(async(imagePath)=>{
         uniquefilename: true,
         overwrite: false,
     };
-        console.log("image path: " + imagePath)
+        console.log("Uploading image from: " + imagePath)
         const result = await cloudinary.uploader.upload(imagePath, options);
-        console.log("CLOUDINARY FILE UPLOAD:" + JSON.stringify(result));
+        console.log("Cloudinary upload successful:", JSON.stringify(result));
+        
+        fs.rm(imagePath, (deleteErr)=>{
+            if(deleteErr){
+                console.log("Falied to delete local image file: ", imagePath);
+                console.log(deleteError)
+            }else{
+                console.log("Local image file deleted: ", imagePath)
+            }
+        })
         return result;
     
 })
