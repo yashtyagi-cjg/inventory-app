@@ -1,5 +1,23 @@
 var express = require('express');
 var router = express.Router();
+const multer = require('multer');
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'profilePics/') 
+  },
+  filename: function (req, file, cb) {
+    const uniquePrefix = Date.now() + '-' + Math.round(Math.random()* 3432);
+    console.log("UNIQUE PREFIX" + uniquePrefix)
+    console.log("file.fieldname " + file.fieldname)
+    cb(null, uniquePrefix + file.originalname); 
+  }
+});
+const upload = multer({storage: storage});
+
+
+
 
 // CONTROLLERS
 const itemController = require('./../controllers/itemController');
@@ -65,4 +83,11 @@ router.post('/delete/category/:id', categoryController.category_delete_post);
 
 router.get('/category/:id/:exists?', categoryController.category_get)
 
+
+//TESTING ROUTE 
+const cpUpload = upload.fields([{name: 'profilePic', maxCount: 1}]);
+router.get('/abc/def',  categoryController.testing_get);
+
+router.post('/abc/def', cpUpload, categoryController.testing_post);
+ 
 module.exports = router;

@@ -4,7 +4,10 @@ block content
 
     form(method='POST')
         div.form-control 
-            label.form-label.lead(for='itemName') Item Name: 
+            label.form-label.mt-3.lead(for='profilePic') Upload Picture: 
+            input#profilePic.form-control(type='file' name='profilePic') 
+
+            label.form-label.lead.mt-3(for='itemName') Item Name: 
             input#itemName.form-control(type='text' name='itemName' value=(undefined===item?'':item.name) required)
             div.form-text This name will be used as an identifier to add to inventory 
 

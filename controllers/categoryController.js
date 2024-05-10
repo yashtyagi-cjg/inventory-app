@@ -3,7 +3,10 @@ const Category = require('./../models/category')
 const asyncHandler = require('express-async-handler')
 const {body, validationResult} = require('express-validator')
 const category = require('./../models/category')
+const {uploadImage, downloadImage} = require('./cloudinaryMethods')
 
+
+// console.log(cloudinary.config())
 
 //Display a Category
 exports.category_get = asyncHandler(
@@ -177,3 +180,17 @@ exports.category_delete_post = asyncHandler(
         }
     }
 )
+
+
+
+
+//IGNORE TESTING SOMETHING 
+
+exports.testing_get = asyncHandler(async(req, res, next)=>{
+    res.render("testing_form");
+})
+
+exports.testing_post = asyncHandler(async(req, res, next)=>{
+    // const result = await uploadImage();
+    console.log(req.files);
+})
