@@ -184,13 +184,22 @@ exports.category_delete_post = asyncHandler(
 
 
 
-//IGNORE TESTING SOMETHING 
+//IGNORE TESTING CLOUDINARY FUNCTIONS WILL DELETE
 
 exports.testing_get = asyncHandler(async(req, res, next)=>{
-    res.render("testing_form");
+    res.render("testing_form",
+    {
+        display: true
+    });
 })
 
 exports.testing_post = asyncHandler(async(req, res, next)=>{
-    // const result = await uploadImage();
-    console.log(req.files);
+    console.log(req.files)
+    const result = await uploadImage(req.files.profilePic[0].path);
+    console.log(result.secure_url + " \n SECURE URL")
+    res.render("testing_form", 
+    {
+        secure_url: result.secure_url
+    })
+    
 })
