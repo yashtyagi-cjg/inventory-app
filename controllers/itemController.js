@@ -204,6 +204,9 @@ exports.update_item_post = [
             uploadedImage = await uploadImage(req.file.path)
         }
 
+        const itemDb = await Item.findById(req.params.id).exec();
+
+
         console.log("BODY: " + JSON.stringify(req.body))
         const updatedItem = new Item({
             name: req.body.itemName,
@@ -211,8 +214,8 @@ exports.update_item_post = [
             quantity: req.body.itemQty,
             available: req.body['available-radio'],
             category: req.body.itemCategory,
-            image_public_id: (undefined === req.file?'':uploadedImage.path),
-            image_secure_url: (undefined === req.file?'':uploadedImage.secure_url),
+            image_public_id: (undefined === req.file?itemDb.image_public_id:uploadedImage.public_id),
+            image_secure_url: (undefined === req.file?itemDb.image_secure_url:uploadedImage.secure_url),
             _id : req.params.id,
         })
         console.log(errors)

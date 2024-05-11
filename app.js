@@ -5,7 +5,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var compression = require('compression');
-const base64vlq = require('./base64-vlq.js');
 
 var helmet = require('helmet');
 
