@@ -22,15 +22,19 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 
-app.use(
+if (process.env.NODE_ENV === 'production') {
+  app.use(compression());
+  app.use(
   helmet.contentSecurityPolicy({
     directives: {
       "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
     },
   }),
 );
+}
 
-app.use(compression);
+
+// app.use(compression);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
