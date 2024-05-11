@@ -48,7 +48,10 @@ exports.items_get = [asyncHandler(
         {
             title: "Items",
             items: res.paginationResults.result,
-            page: res.paginationResults.prevPage,
+            prevPage: parseInt(res.paginationResults.prevPage),
+            currPage: parseInt(res.paginationResults.currPage),
+            nextPage: parseInt(res.paginationResults.nextPage),
+            maxPage: parseInt(res.paginationResults.maxPage)
 
             
         })

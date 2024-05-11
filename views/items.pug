@@ -1,11 +1,42 @@
 extends layout 
 block content 
-    h1(class="display-6")=title 
+    h1.mb-5(class="display-6")=title 
 
     if items != undefined && items.length > 0
-        ol(class='list-unstyled ms-4')
+        //- ol(class='list-unstyled ms-4')
+        //-     each item in items 
+                //- li 
+                //-     a(href=item.url class='no-underline-links')=item.name + " : " + item.quantity + " Qty."
+        div.d-flex.flex-wrap.gap-3.justify-content-around
             each item in items 
-                li 
-                    a(href=item.url class='no-underline-links')=item.name + " : " + item.quantity + " Qty."
-    else 
+                div.card(style="width: 18rem;")  
+                    if item.image_secure_url
+                        img.card-img-top(src=item.image_secure_url style="height: 50%; object-fit: contain;")  
+                    else 
+                        img.card-img-top(src='/images/download.png' style="height: 50%; object-fit: contain; ")  
+                    div.card-body.d-flex.flex-column.align-items-center
+                        h5.card-title=item.name 
+                        p.card-text Rs. #{item.price}  
+                        if item.available 
+                            p.text-success Available 
+                        else 
+                            p.text-danger Not Available
+                        a.btn.btn-primary(href=item.url) Details
+
+
+        
+        nav
+            ul.pagination.justify-content-center.align-self-end.mt-4
+                li.page-item(class=(prevPage===undefined ? 'disabled' : ''))
+                    a.page-link(href=`/items/${prevPage}` )
+                        span &laquo;
+                each page in Array.from({length: maxPage}, (_, i)=>i+1)
+                    li.page-item(class=(currPage===page?'active':''))
+                        a.page-link(href=`/items/${page}`)=page
+
+                li.page-item(class=(nextPage===undefined?'disabled':''))
+                    a.page-link(href=`/items/${nextPage}`)
+                        span &raquo;
+    else        
         p(class='lead') There are no items to display
+    

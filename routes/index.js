@@ -21,21 +21,30 @@ const cpUpload = upload.single('profilePic');;
 //Middleware for pagingation
 function paginateModel(Model){
   return async(req, res, next)=>{
-    const page = (undefined === req.params.page?1:parseInt(req.params.page));
+    const page = parseInt(req.params.page)|| 1;
     const limit = parseInt(req.query.limit) || 5;
     const skip = (page-1)*limit;
+    const maxPage = Math.ceil(await Model.countDocuments().exec() / limit)
+
 
     const results = {}
+    
+    results.maxPage = maxPage;
+    results.currPage = page;
 
-    if(page >= 1){
-      results.prevPage = 1
+    if(page > 1){
+      results.prevPage = page-1
+    }
+
+    if(page < maxPage){
+      results.nextPage = page+1
     }
 
     try{
       results.result = await Model.find({}).skip(skip).limit(limit).exec();
 
       res.paginationResults = results;
-      console.log(res)
+      // console.log(res)
       next()
     }catch(err){
       res.status(500).json({message: err.message})
