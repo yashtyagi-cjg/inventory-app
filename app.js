@@ -63,7 +63,7 @@ app.use(function(err, req, res, next) {
 
 main().catch((err)=>console.log(err));
 async function main(){
-  await mongoose.connect(process.env.DB_CONN);
+  await mongoose.connect(process.env.MONGODB_URI);
   console.log("Connected to MongoDB")
 }
 
