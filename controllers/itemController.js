@@ -39,18 +39,21 @@ exports.item_get = asyncHandler(
 )
 
 //Display list of items
-exports.items_get = asyncHandler(
+exports.items_get = [asyncHandler(
     async(req,res,next)=>{
-        const items = await Item.find({}).exec();
-        // console.log(items)
+
+        const items = res.results
+        console.log(res.paginationResults)
         res.render("items", 
         {
             title: "Items",
-            items: items,
+            items: res.paginationResults.result,
+            page: res.paginationResults.prevPage,
+
             
         })
     }
-)
+)]
 
 
 //Display Create Item

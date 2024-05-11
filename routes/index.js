@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const multer = require('multer');
+const Item = require('./../models/item')
 
 
 const storage = multer.diskStorage({
@@ -17,8 +18,30 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage});
 const cpUpload = upload.single('profilePic');;
 
+//Middleware for pagingation
+function paginateModel(Model){
+  return async(req, res, next)=>{
+    const page = (undefined === req.params.page?1:parseInt(req.params.page));
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page-1)*limit;
 
+    const results = {}
 
+    if(page >= 1){
+      results.prevPage = 1
+    }
+
+    try{
+      results.result = await Model.find({}).skip(skip).limit(limit).exec();
+
+      res.paginationResults = results;
+      console.log(res)
+      next()
+    }catch(err){
+      res.status(500).json({message: err.message})
+    }
+  }
+}
 
 // CONTROLLERS
 const itemController = require('./../controllers/itemController');
@@ -29,7 +52,7 @@ router.get('/', itemController.get_homepage);
 
 // ITEM CONTROLLER ROUTES
 
-router.get('/items', itemController.items_get);
+router.get('/items/:page?', paginateModel(Item),itemController.items_get);
 
 //CREATE ITEMS
 
@@ -58,7 +81,6 @@ router.get('/item/:id/:exists?', itemController.item_get);
 // CATEGORY CONTROLLER ROUTES
 
 //GET CATEGORIES
-
 router.get('/categories', categoryController.categories_get);
 
 
